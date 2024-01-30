@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: -874973577
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 86671364, guid: 82d39ebbed70b9043ad4c5a7cdfa1da6, type: 3}
+  m_Sprite: {fileID: -503611296, guid: 82d39ebbed70b9043ad4c5a7cdfa1da6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -100,6 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridCenter: {fileID: 8223117298342569047}
+  cellInWorldPos: {x: 0, y: 0, z: 0}
 --- !u!61 &7800891303898691500
 BoxCollider2D:
   m_ObjectHideFlags: 0

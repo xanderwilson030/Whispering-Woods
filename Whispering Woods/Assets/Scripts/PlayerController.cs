@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -22,8 +23,9 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
 
-        Vector3Int cellPos = tm.WorldToCell(startingPos.gameObject.transform.position);
-        gameObject.transform.position = tm.GetCellCenterWorld(cellPos);
+        //Vector3Int cellPos = tm.WorldToCell(startingPos.gameObject.transform.position);
+        //gameObject.transform.position = tm.GetCellCenterWorld(cellPos);
+        //transform.position = startingPos.gameObject.GetComponent<GridTile>().cellInWorldPos;
 
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
@@ -76,8 +78,17 @@ public class PlayerController : MonoBehaviour
         if (hit.collider == null)
             return;
 
-        gameObject.transform.position = hit.collider.gameObject.GetComponent<GridTile>().gridCenter.position;
+        //gameObject.transform.position = hit.collider.gameObject.GetComponent<GridTile>().gridCenter.position;
+        gameObject.transform.position = hit.collider.gameObject.GetComponent<GridTile>().cellInWorldPos;
+
+        Debug.Log(hit.collider.gameObject.transform.position);
+
+        //gameObject.transform.position = tm.GetCellCenterWorld(new Vector3Int((int)hit.collider.gameObject.transform.position.x, (int)hit.collider.gameObject.transform.position.y, 0));
+
+        
+
         //hit.collider.gameObject.SetActive(false);
+        //hit.collider.gameObject.SetActive(true);
     }
 
 }
