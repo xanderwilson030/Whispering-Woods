@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 42633722848155244}
   - component: {fileID: 1744405306322728357}
-  - component: {fileID: 4074986905601170222}
+  - component: {fileID: 4892758368468222867}
   - component: {fileID: 7800891303898691500}
   m_Layer: 6
-  m_Name: GridTile
+  m_Name: FloorTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -87,7 +87,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4074986905601170222
+--- !u!114 &4892758368468222867
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -96,11 +96,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 5061926273521961530}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 947299cf0af3fa74d98ed8f618939257, type: 3}
+  m_Script: {fileID: 11500000, guid: c2f529b09b904d443a8a07add1b433b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridCenter: {fileID: 8223117298342569047}
+  gridCenter: {fileID: 0}
   cellInWorldPos: {x: 0, y: 0, z: 0}
+  isLit: 0
+  isOccupied: 0
+  isWalkable: 1
+  tileVariations:
+  - {fileID: 233902999, guid: 82d39ebbed70b9043ad4c5a7cdfa1da6, type: 3}
+  - {fileID: 1867957220, guid: 82d39ebbed70b9043ad4c5a7cdfa1da6, type: 3}
+  - {fileID: -503611296, guid: 82d39ebbed70b9043ad4c5a7cdfa1da6, type: 3}
+  - {fileID: 360701870, guid: 82d39ebbed70b9043ad4c5a7cdfa1da6, type: 3}
+  - {fileID: 794691255, guid: 82d39ebbed70b9043ad4c5a7cdfa1da6, type: 3}
+  - {fileID: 1911608758, guid: 82d39ebbed70b9043ad4c5a7cdfa1da6, type: 3}
+  - {fileID: 1723453930, guid: 82d39ebbed70b9043ad4c5a7cdfa1da6, type: 3}
+  - {fileID: 932287192, guid: 82d39ebbed70b9043ad4c5a7cdfa1da6, type: 3}
+  - {fileID: -227889625, guid: 82d39ebbed70b9043ad4c5a7cdfa1da6, type: 3}
+  - {fileID: 590276161, guid: 82d39ebbed70b9043ad4c5a7cdfa1da6, type: 3}
+  - {fileID: 1845297610, guid: 82d39ebbed70b9043ad4c5a7cdfa1da6, type: 3}
+  - {fileID: -637313172, guid: 82d39ebbed70b9043ad4c5a7cdfa1da6, type: 3}
+  - {fileID: 726035946, guid: 82d39ebbed70b9043ad4c5a7cdfa1da6, type: 3}
+  hasMultipleVariations: 1
 --- !u!61 &7800891303898691500
 BoxCollider2D:
   m_ObjectHideFlags: 0
