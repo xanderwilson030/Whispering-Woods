@@ -12,7 +12,7 @@ TagManager:
   - Water
   - UI
   - Tile
-  - 
+  - Player
   - 
   - 
   - 
@@ -47,12 +47,12 @@ TagManager:
   - name: Decor
     uniqueID: 1441647683
     locked: 0
-  - name: Player
-    uniqueID: 576212193
-    locked: 0
   - name: Items
     uniqueID: 2255341665
     locked: 0
   - name: Walls
     uniqueID: 4249705863
+    locked: 0
+  - name: Player
+    uniqueID: 576212193
     locked: 0
