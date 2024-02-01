@@ -1,16 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : Character
 {
     [Header("Object References")]
-    [SerializeField] private Player player;    
+    [SerializeField] private Player player;
+
+    //[Header("UI Details")]
 
 
     private void Start()
     {
-        player = GameObject.Find("Player").GetComponent<Player>(); ;
+        player = GameObject.Find("Player").GetComponent<Player>();
     }
 
     public override void CalculateMovement()
@@ -25,7 +28,8 @@ public class Enemy : Character
 
     public override void StartTurn()
     {
-        throw new System.NotImplementedException();
+        currentActionCount = 0;
+        
     }
 
     public override void TakeCombatAction(CombatActions action, Character target)
@@ -33,7 +37,7 @@ public class Enemy : Character
         throw new System.NotImplementedException();
     }
 
-    private void OnMouseEnter()
+    public override void OnMouseEnter()
     {
         isHighlighted = true;
 
@@ -43,7 +47,7 @@ public class Enemy : Character
         }
     }
 
-    private void OnMouseExit()
+    public override void OnMouseExit()
     {
         isHighlighted = false;
         highLight.intensity = baseHighLightIntensity;

@@ -2,15 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public abstract class Character : MonoBehaviour
 {
     [Header("Character Stats")]
     public int curHp;
     public int maxHp;
-    public int currentMovementNumber;
-    public int maxMovementRange;
+    public int currentActionCount;
+    public int maxTurnActions;
+    public int attackActionCost;
 
     [Header("Movement Details")]
     [SerializeField] protected GridTile startingPos;
@@ -25,12 +26,19 @@ public abstract class Character : MonoBehaviour
     [SerializeField] protected int baseHighLightIntensity;
     [SerializeField] protected int selectedHighLightIntensity;
 
+    [Header("Health Slider")]
+    public Slider healthSlider;
+
     private void Awake()
     {
         if (startingPos != null)
         {
             currentTile = startingPos.GetComponent<GridTile>();
         }
+
+        curHp = maxHp;
+        healthSlider.maxValue = maxHp;
+        healthSlider.value = curHp;
     }
 
     public abstract void StartTurn();
@@ -45,9 +53,9 @@ public abstract class Character : MonoBehaviour
         gameObject.transform.position = hit.collider.gameObject.GetComponent<GridTile>().cellInWorldPos;
         currentTile = hit.collider.gameObject.GetComponent<GridTile>();
 
-        currentMovementNumber++;
+        currentActionCount++;
 
-        if (currentMovementNumber >= maxMovementRange)
+        if (currentActionCount >= maxTurnActions)
         {
             canMove = false;
             Debug.Log("<color=orange> Current character has exhausted their movement range </color>");
@@ -55,10 +63,15 @@ public abstract class Character : MonoBehaviour
     }
     public abstract void TakeCombatAction(CombatActions action, Character target);
 
+    public abstract void OnMouseEnter();
+    public abstract void OnMouseExit();
+
     public void TakeDamage(int damageToTake)
     {
         Debug.Log("Damage to take: " + damageToTake);
         curHp -= damageToTake;
+
+        healthSlider.value = curHp;
 
         if (curHp <= 0)
         {

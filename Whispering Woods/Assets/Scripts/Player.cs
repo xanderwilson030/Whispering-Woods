@@ -11,13 +11,18 @@ public class Player : Character
     public CombatActions selectedCombatAction;
     public bool canSelect;
     public List<CombatActions> abilities;
+    public int meleeRange;
+    public int rangedRange;
 
     [Header("UI Details")]
-    public Slider healthSlider;
     public Slider movementSlider;
     public Button meleeButton;
     public Button healButton;
     public Button rangedButton;
+    public GameObject combatButtons;
+    public GameObject EndTurnButton;
+    public GameObject turnText;
+    public GameObject background;
 
     [Header("Debug")]
     public List<GridTile> debugList;
@@ -26,11 +31,7 @@ public class Player : Character
 
     private void Start()
     {
-        curHp = maxHp;
-        healthSlider.maxValue = maxHp;
-        healthSlider.value = curHp;
-
-        movementSlider.value = maxMovementRange;
+        movementSlider.value = maxTurnActions;
 
         canSelect = false;
 
@@ -95,10 +96,15 @@ public class Player : Character
         gameObject.transform.position = hit.collider.gameObject.GetComponent<GridTile>().cellInWorldPos;
         currentTile = hit.collider.gameObject.GetComponent<GridTile>();
 
-        currentMovementNumber++;
-        movementSlider.value = (maxMovementRange - currentMovementNumber);
+        if (currentTile.isOccupied){
+            Debug.Log("<color=orange> Destination Tile is occupied </color>");
+            return;
+        }
 
-        if (currentMovementNumber >= maxMovementRange)
+        currentActionCount++;
+        movementSlider.value = (maxTurnActions - currentActionCount);
+
+        if (currentActionCount >= maxTurnActions)
         {
             canMove = false;
             Debug.Log("<color=orange> Current character has exhausted their movement range </color>");
@@ -109,13 +115,23 @@ public class Player : Character
     {
         isPlayerTurn = true;
         canMove = true;
-        currentMovementNumber = 0;
-        movementSlider.value = maxMovementRange;
+        currentActionCount = 0;
+        movementSlider.value = maxTurnActions;
+        turnText.SetActive(false);
+        combatButtons.SetActive(true);
+        EndTurnButton.SetActive(true);
+        background.SetActive(true);
     }
 
     public override void EndTurn()
     {
         isPlayerTurn = false;
+        GameEvents.instance.e_TurnOver.Invoke();
+
+        combatButtons.SetActive(false);
+        EndTurnButton.SetActive(false);
+        background.SetActive(false);
+        turnText.SetActive(true);
     }
 
     public override void TakeCombatAction(CombatActions action, Character target)
@@ -123,6 +139,11 @@ public class Player : Character
         switch (action.ActionType)
         {
             case Type.Melee:
+                if (Vector3.Distance(gameObject.transform.position, target.gameObject.transform.position) > meleeRange){
+                    canSelect = true;
+                    Debug.Log("<color=orange> Enemy is not close enough for melee attack </color>");
+                    return;
+                }
                 target.TakeDamage(action.Damage);
                 Debug.Log($"Executing melee atack for {action.Damage} damage");
                 break;
@@ -131,7 +152,12 @@ public class Player : Character
                 Debug.Log($"Healing target for {action.HealAmount}");
                 break;
             case Type.Ranged:
-                Debug.LogError("Not Implemented Yet - Ranged Attack");
+                if (Vector3.Distance(gameObject.transform.position, target.gameObject.transform.position) > rangedRange)
+                {
+                    canSelect = true;
+                    Debug.Log("<color=orange> Enemy is not close enough for ranged attack </color>");
+                    return;
+                }
                 break;
             default:
                 Debug.LogError("Incompatible Combat Action Type Inputted");
@@ -141,8 +167,17 @@ public class Player : Character
 
     private void SelectTarget(CombatActions action)
     {
-        canSelect = true;
-        selectedCombatAction = action;
+        if (currentActionCount + attackActionCost >= maxTurnActions)
+        {
+            Debug.Log("<color=orange> Player doesn't have enough action points left to do the requested action </color>");
+            return;
+        }
+        else
+        {
+            canSelect = true;
+            selectedCombatAction = action;
+            currentActionCount += attackActionCost;
+        }
     }
 
     private void SearchForTarget()
@@ -165,7 +200,38 @@ public class Player : Character
                     Debug.Log("Enemy found and selected");
                     TakeCombatAction(selectedCombatAction, enemy);
                 }
+                else
+                {
+                    Player player = hit.collider.gameObject.GetComponent<Player>();
+
+                    if (player != null)
+                    {
+                        canSelect = false;
+                        Debug.Log("Selected Player");
+                        
+                        if (selectedCombatAction.ActionType == Type.Heal)
+                        {
+                            TakeCombatAction(selectedCombatAction, player);
+                        }
+                    }
+                }
             }
         }
+    }
+
+    public override void OnMouseEnter()
+    {
+        isHighlighted = true;
+
+        if (canSelect)
+        {
+            highLight.intensity = selectedHighLightIntensity;
+        }
+    }
+
+    public override void OnMouseExit()
+    {
+        isHighlighted = false;
+        highLight.intensity = baseHighLightIntensity;
     }
 }
