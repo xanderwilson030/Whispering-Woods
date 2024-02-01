@@ -119,6 +119,14 @@ MonoBehaviour:
   - {fileID: -637313172, guid: 82d39ebbed70b9043ad4c5a7cdfa1da6, type: 3}
   - {fileID: 726035946, guid: 82d39ebbed70b9043ad4c5a7cdfa1da6, type: 3}
   hasMultipleVariations: 1
+  northTile: {fileID: 0}
+  southTile: {fileID: 0}
+  eastTile: {fileID: 0}
+  westTile: {fileID: 0}
+  rayCastDistance: 1
+  movementLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!61 &7800891303898691500
 BoxCollider2D:
   m_ObjectHideFlags: 0
