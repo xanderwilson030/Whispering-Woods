@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
         //gameObject.transform.position = hit.collider.gameObject.GetComponent<GridTile>().gridCenter.position;
         gameObject.transform.position = hit.collider.gameObject.GetComponent<GridTile>().cellInWorldPos;
 
-        Debug.Log(hit.collider.gameObject.transform.position);
+        //Debug.Log(hit.collider.gameObject.transform.position);
 
         //gameObject.transform.position = tm.GetCellCenterWorld(new Vector3Int((int)hit.collider.gameObject.transform.position.x, (int)hit.collider.gameObject.transform.position.y, 0));
 
