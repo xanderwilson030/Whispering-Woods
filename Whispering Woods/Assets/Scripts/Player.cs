@@ -8,10 +8,16 @@ public class Player : Character
 {
     [Header("Player Details")]
     public bool isPlayerTurn;
+    public CombatActions selectedCombatAction;
+    public bool canSelect;
+    public List<CombatActions> abilities;
 
     [Header("UI Details")]
     public Slider healthSlider;
     public Slider movementSlider;
+    public Button meleeButton;
+    public Button healButton;
+    public Button rangedButton;
 
     [Header("Debug")]
     public List<GridTile> debugList;
@@ -25,6 +31,12 @@ public class Player : Character
         healthSlider.value = curHp;
 
         movementSlider.value = maxMovementRange;
+
+        canSelect = false;
+
+        meleeButton.onClick.AddListener(() => SelectTarget(abilities[0]));
+        healButton.onClick.AddListener(() => SelectTarget(abilities[1]));
+        rangedButton.onClick.AddListener(()=> SelectTarget(abilities[2]));
     }
 
     private void Update()
@@ -34,24 +46,9 @@ public class Player : Character
             CalculateMovement();
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (canSelect)
         {
-            Debug.Log("Searching for tile");
-            LocateNeighbors(new Vector3Int(-7, 0,0));
-        }
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
-
-            if (hit.collider != null)
-            {
-                GameObject clickedObject = hit.collider.gameObject;
-                Debug.Log("Clicked Object: " + clickedObject.name);
-
-                // Add more debug statements or checks here
-            }
+            SearchForTarget();
         }
     }
 
@@ -121,66 +118,54 @@ public class Player : Character
         isPlayerTurn = false;
     }
 
-    public override void TakeCombatAction(CombatActions action)
+    public override void TakeCombatAction(CombatActions action, Character target)
     {
-        throw new System.NotImplementedException();
+        switch (action.ActionType)
+        {
+            case Type.Melee:
+                target.TakeDamage(action.Damage);
+                Debug.Log($"Executing melee atack for {action.Damage} damage");
+                break;
+            case Type.Heal:
+                Heal(action.HealAmount);
+                Debug.Log($"Healing target for {action.HealAmount}");
+                break;
+            case Type.Ranged:
+                Debug.LogError("Not Implemented Yet - Ranged Attack");
+                break;
+            default:
+                Debug.LogError("Incompatible Combat Action Type Inputted");
+                break;
+        }
     }
 
-    public List<GridTile> LocateNeighbors(Vector3Int cellPosition)
+    private void SelectTarget(CombatActions action)
     {
-        List<GridTile> neighborTiles = new List<GridTile>();
+        canSelect = true;
+        selectedCombatAction = action;
+    }
 
-        Debug.Log("Current Cell Position: " + cellPosition);
-
-        Vector3Int[] neighborOffsets = new Vector3Int[]
+    private void SearchForTarget()
+    {
+        if (Input.GetMouseButtonDown(0))
         {
-        new Vector3Int(0, 1, 0), // Top
-        new Vector3Int(1, 0, 0), // Right
-        new Vector3Int(0, -1, 0), // Bottom
-        new Vector3Int(-1, 0, 0) // Left
-        };
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
 
-        foreach (var offset in neighborOffsets)
-        {
-            Vector3Int neighborPosition = cellPosition + offset;
-            Debug.Log("Checking Neighbor Position: " + neighborPosition);
-
-            TileBase neighborTile = tilemap.GetTile(neighborPosition);
-
-            if (neighborTile != null)
+            if (hit.collider != null)
             {
-                GameObject neighborGameObject = tilemap.GetInstantiatedObject(neighborPosition);
-                Debug.Log("Running");
+                GameObject clickedObject = hit.collider.gameObject;
+                Debug.Log("Clicked Object: " + clickedObject.name);
 
-                if (neighborGameObject != null)
-                {
-                    GridTile gridTileScript = neighborGameObject.GetComponent<GridTile>();
-                    Debug.Log("Running2");
+                Enemy enemy = hit.collider.gameObject.GetComponent<Enemy>();
 
-                    if (gridTileScript != null)
-                    {
-                        neighborTiles.Add(gridTileScript);
-                        Debug.Log("Adding");
-                    }
-                    else
-                    {
-                        Debug.LogWarning("GridTile script not found on neighbor tile GameObject.");
-                    }
-                }
-                else
+                if (enemy != null)
                 {
-                    Debug.LogWarning("No tile GameObject found for neighbor at position: " + neighborPosition);
+                    canSelect = false;
+                    Debug.Log("Enemy found and selected");
+                    TakeCombatAction(selectedCombatAction, enemy);
                 }
-            }
-            else
-            {
-                Debug.LogWarning("No tile found for neighbor at position: " + neighborPosition);
             }
         }
-
-        Debug.Log("Size of neighbor tiles: " + neighborTiles.Count);
-        return neighborTiles;
     }
-
-
 }

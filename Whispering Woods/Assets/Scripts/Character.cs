@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
 public abstract class Character : MonoBehaviour
@@ -17,6 +18,9 @@ public abstract class Character : MonoBehaviour
     public LayerMask movementLayerMask;
     public GridTile currentTile;
     public bool canMove;
+
+    [Header("Additional References")]
+    [SerializeField] private Light2D highLight;
 
     private void Awake()
     {
@@ -46,7 +50,7 @@ public abstract class Character : MonoBehaviour
             Debug.Log("<color=orange> Current character has exhausted their movement range </color>");
         }
     }
-    public abstract void TakeCombatAction(CombatActions action);
+    public abstract void TakeCombatAction(CombatActions action, Character target);
 
     public void TakeDamage(int damageToTake)
     {

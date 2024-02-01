@@ -39,14 +39,14 @@ public class GridTile : MonoBehaviour
 
         SetWorldLocation();
 
-        // Get the world position of the tile's GameObject
-        Vector3 worldPosition = gameObject.transform.position;
+        //// Get the world position of the tile's GameObject
+        //Vector3 worldPosition = gameObject.transform.position;
 
-        // Convert the world position to cell position (Vector3Int)
-        Vector3Int cellPosition = tilemap.WorldToCell(worldPosition);
-        cellInTileMapPos = cellPosition;
+        //// Convert the world position to cell position (Vector3Int)
+        //Vector3Int cellPosition = tilemap.WorldToCell(worldPosition);
+        //cellInTileMapPos = cellPosition;
 
-        neighbors = LocateNeighbors(cellPosition);
+        //neighbors = LocateNeighbors(cellPosition);
 
         if (hasMultipleVariations)
         {
