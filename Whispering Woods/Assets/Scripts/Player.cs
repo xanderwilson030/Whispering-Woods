@@ -1,33 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
-public class PlayerController : MonoBehaviour
+public class Player : Character
 {
-    [Header("Stats")]
-    public int curHp;
-    public int maxHp;
-    public float moveSpeed;
+    [Header("Player Details")]
+    public bool isPlayerTurn;
 
-    [Header("Movement Details")]
-    [SerializeField] private Tilemap tm;
-    [SerializeField] private GridTile startingPos;
-    [SerializeField] private float rayCastDistance;
-    public LayerMask movementLayerMask;
+    [Header("UI Details")]
+    public Slider healthSlider;
+    public Slider movementSlider;
+
 
     private void Start()
     {
+        curHp = maxHp;
+        healthSlider.maxValue = maxHp;
+        healthSlider.value = curHp;
 
+        movementSlider.value = maxMovementRange;
     }
 
     private void Update()
     {
-        TryMovement();
+        if (isPlayerTurn && canMove)
+        {
+            CalculateMovement();
+        }
     }
 
-    private void TryMovement()
+    public override void CalculateMovement()
     {
         RaycastHit2D hit;
 
@@ -36,14 +39,14 @@ public class PlayerController : MonoBehaviour
             hit = Physics2D.Raycast((Vector2)transform.position + Vector2.up, Vector3.up, rayCastDistance, movementLayerMask);
             Debug.DrawRay((Vector2)transform.position + Vector2.up, Vector3.up, Color.red, rayCastDistance);
 
-            MovePlayer(hit);
+            Move(hit);
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             hit = Physics2D.Raycast((Vector2)transform.position + Vector2.down, Vector3.down, rayCastDistance, movementLayerMask);
             Debug.DrawRay((Vector2)transform.position + Vector2.down, Vector3.down, Color.red, rayCastDistance);
 
-            MovePlayer(hit);
+            Move(hit);
 
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -51,33 +54,52 @@ public class PlayerController : MonoBehaviour
             hit = Physics2D.Raycast((Vector2)transform.position + Vector2.left, Vector3.left, rayCastDistance, movementLayerMask);
             Debug.DrawRay((Vector2)transform.position + Vector2.left, Vector3.left, Color.red, rayCastDistance);
 
-            MovePlayer(hit);
+            Move(hit);
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             hit = Physics2D.Raycast((Vector2)transform.position + Vector2.right, Vector3.right, rayCastDistance, movementLayerMask);
             Debug.DrawRay((Vector2)transform.position + Vector2.right, Vector3.right, Color.red, rayCastDistance);
 
-            MovePlayer(hit);
+            Move(hit);
         }
     }
 
-    private void MovePlayer(RaycastHit2D hit)
+    public override void Move(RaycastHit2D hit)
     {
         if (hit.collider == null)
             return;
 
-        //gameObject.transform.position = hit.collider.gameObject.GetComponent<GridTile>().gridCenter.position;
         gameObject.transform.position = hit.collider.gameObject.GetComponent<GridTile>().cellInWorldPos;
+        currentTile = hit.collider.gameObject.GetComponent<GridTile>();
 
-        //Debug.Log(hit.collider.gameObject.transform.position);
+        currentMovementNumber++;
+        movementSlider.value = (maxMovementRange - currentMovementNumber);
 
-        //gameObject.transform.position = tm.GetCellCenterWorld(new Vector3Int((int)hit.collider.gameObject.transform.position.x, (int)hit.collider.gameObject.transform.position.y, 0));
-
-        
-
-        //hit.collider.gameObject.SetActive(false);
-        //hit.collider.gameObject.SetActive(true);
+        if (currentMovementNumber >= maxMovementRange)
+        {
+            canMove = false;
+            Debug.Log("<color=orange> Current character has exhausted their movement range </color>");
+        }
     }
 
+    public override void StartTurn()
+    {
+        isPlayerTurn = true;
+        canMove = true;
+        currentMovementNumber = 0;
+        movementSlider.value = maxMovementRange;
+    }
+
+    public override void EndTurn()
+    {
+        isPlayerTurn = false;
+    }
+
+    public override void TakeCombatAction(CombatActions action)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    
 }

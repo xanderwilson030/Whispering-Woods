@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public abstract class Character : MonoBehaviour
 {
@@ -10,9 +11,42 @@ public abstract class Character : MonoBehaviour
     public int currentMovementNumber;
     public int maxMovementRange;
 
+    [Header("Movement Details")]
+    [SerializeField] protected GridTile startingPos;
+    public float rayCastDistance;
+    public LayerMask movementLayerMask;
+    public GridTile currentTile;
+    public bool canMove;
+
+    private void Awake()
+    {
+        if (startingPos != null)
+        {
+            currentTile = startingPos.GetComponent<GridTile>();
+        }
+    }
+
     public abstract void StartTurn();
-    public abstract void Move();
-    public abstract void TakeCombatAction();
+    public abstract void EndTurn();
+
+    public abstract void CalculateMovement();
+    public virtual void Move(RaycastHit2D hit)
+    {
+        if (hit.collider == null)
+            return;
+
+        gameObject.transform.position = hit.collider.gameObject.GetComponent<GridTile>().cellInWorldPos;
+        currentTile = hit.collider.gameObject.GetComponent<GridTile>();
+
+        currentMovementNumber++;
+
+        if (currentMovementNumber >= maxMovementRange)
+        {
+            canMove = false;
+            Debug.Log("<color=orange> Current character has exhausted their movement range </color>");
+        }
+    }
+    public abstract void TakeCombatAction(CombatActions action);
 
     public void TakeDamage(int damageToTake)
     {
@@ -25,7 +59,7 @@ public abstract class Character : MonoBehaviour
         }
     }
 
-    private void Die()
+    protected void Die()
     {
         Destroy(gameObject);
     }

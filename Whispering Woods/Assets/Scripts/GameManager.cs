@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         GameEvents.instance.e_TurnOver.AddListener(BeginNextTurn);
+
+        BeginNextTurn();
     }
 
     /*
@@ -38,18 +40,18 @@ public class GameManager : MonoBehaviour
      */
     private void BeginNextTurn()
     {
-        if (currentCharacterIndex++ > characterList.Count)
+        currentCharacterIndex++;
+
+        if (currentCharacterIndex > characterList.Count)
         {
             currentCharacterIndex = 0;
-        }
-        else
-        {
-            currentCharacterIndex++;
         }
 
         currentCharacter = characterList[currentCharacterIndex];
 
         currentCharacter.StartTurn();
+
+        Debug.Log("<color=green> New Turn Started for Character: " + currentCharacter.gameObject.name + "</color>");
     }
 
 
