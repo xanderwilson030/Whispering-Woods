@@ -19,8 +19,11 @@ public abstract class Character : MonoBehaviour
     public GridTile currentTile;
     public bool canMove;
 
-    [Header("Additional References")]
-    [SerializeField] private Light2D highLight;
+    [Header("Highlight Details")]
+    [SerializeField] protected bool isHighlighted;
+    [SerializeField] protected Light2D highLight;
+    [SerializeField] protected int baseHighLightIntensity;
+    [SerializeField] protected int selectedHighLightIntensity;
 
     private void Awake()
     {
