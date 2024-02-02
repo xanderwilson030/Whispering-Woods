@@ -8,6 +8,10 @@ public class Enemy : Character
     [Header("Object References")]
     [SerializeField] private Player player;
 
+    [Header("Movement Details")]
+    [SerializeField] private int horizontalTileDistance;
+    [SerializeField] private int verticalTileDistance;
+
     //[Header("UI Details")]
 
 
@@ -18,7 +22,71 @@ public class Enemy : Character
 
     public override void CalculateMovement()
     {
-        throw new System.NotImplementedException();
+        float distanceToPlayer = Vector3.Distance(gameObject.transform.position, player.transform.position);
+        Debug.Log($"Distance to player is: {distanceToPlayer}");
+        Debug.Log($"Player location: {player.gameObject.transform.position} | Enemy location: {gameObject.transform.position}");
+
+        int horizontalDistanceToPlayer = (int)(player.gameObject.transform.position.x - gameObject.transform.position.x);
+        int verticalDistanceToPlayer = (int)(player.gameObject.transform.position.y - gameObject.transform.position.y);
+        Debug.Log($"H Distance: {horizontalDistanceToPlayer}:{verticalDistanceToPlayer}");
+
+        if (horizontalDistanceToPlayer > 0 || verticalDistanceToPlayer > 0)
+        {
+            RaycastHit2D hit;
+
+            if (verticalDistanceToPlayer > 0)
+            {
+                hit = Physics2D.Raycast((Vector2)transform.position + Vector2.up, Vector3.up, rayCastDistance, movementLayerMask);
+                Debug.DrawRay((Vector2)transform.position + Vector2.up, Vector3.up, Color.red, rayCastDistance);
+
+                Move(hit);
+            }
+            else if (verticalDistanceToPlayer < 0)
+            {
+                hit = Physics2D.Raycast((Vector2)transform.position + Vector2.down, Vector3.down, rayCastDistance, movementLayerMask);
+                Debug.DrawRay((Vector2)transform.position + Vector2.down, Vector3.down, Color.red, rayCastDistance);
+
+                Move(hit);
+
+            }
+            else if (horizontalDistanceToPlayer < 0)
+            {
+                hit = Physics2D.Raycast((Vector2)transform.position + Vector2.left, Vector3.left, rayCastDistance, movementLayerMask);
+                Debug.DrawRay((Vector2)transform.position + Vector2.left, Vector3.left, Color.red, rayCastDistance);
+
+                Move(hit);
+            }
+            else if (horizontalDistanceToPlayer > 0)
+            {
+                hit = Physics2D.Raycast((Vector2)transform.position + Vector2.right, Vector3.right, rayCastDistance, movementLayerMask);
+                Debug.DrawRay((Vector2)transform.position + Vector2.right, Vector3.right, Color.red, rayCastDistance);
+
+                Move(hit);
+            }
+        }
+    }
+
+    public override void Move(RaycastHit2D hit)
+    {
+        if (hit.collider == null)
+            return;
+
+        gameObject.transform.position = hit.collider.gameObject.GetComponent<GridTile>().cellInWorldPos;
+        currentTile = hit.collider.gameObject.GetComponent<GridTile>();
+
+        if (currentTile.isOccupied)
+        {
+            Debug.Log("<color=orange> Destination Tile is occupied </color>");
+            return;
+        }
+
+        currentActionCount++;
+
+        if (currentActionCount >= maxTurnActions)
+        {
+            canMove = false;
+            Debug.Log("<color=orange> Current character has exhausted their movement range </color>");
+        }
     }
 
     public override void EndTurn()
@@ -29,8 +97,10 @@ public class Enemy : Character
     public override void StartTurn()
     {
         currentActionCount = 0;
-        
+        CalculateMovement();
     }
+
+
 
     public override void TakeCombatAction(CombatActions action, Character target)
     {
