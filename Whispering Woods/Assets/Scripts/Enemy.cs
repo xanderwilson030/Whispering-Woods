@@ -114,6 +114,9 @@ public class Enemy : Character
 
         currentActionCount++;
 
+        audioSource.clip = clips[3];
+        audioSource.Play();
+
         if (currentActionCount >= maxTurnActions)
         {
             canMove = false;
@@ -185,12 +188,16 @@ public class Enemy : Character
         if (action.ActionType == Type.Heal)
         {
             Heal(action.HealAmount);
+            audioSource.clip = clips[4];
+            audioSource.Play();
         }
 
         if (action.ActionType == Type.Melee)
         {
             Debug.Log($"Attacked {target.name} for {action.Damage} damage");
             target.TakeDamage(action.Damage);
+            audioSource.clip = clips[2];
+            audioSource.Play();
         }
     }
 

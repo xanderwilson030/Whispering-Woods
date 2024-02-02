@@ -104,6 +104,9 @@ public class Player : Character
         currentActionCount++;
         movementSlider.value = (maxTurnActions - currentActionCount);
 
+        audioSource.clip = clips[4];
+        audioSource.Play();
+
         if (currentActionCount >= maxTurnActions)
         {
             canMove = false;
@@ -145,9 +148,13 @@ public class Player : Character
                     return;
                 }
                 target.TakeDamage(action.Damage);
+                audioSource.clip = clips[2];
+                audioSource.Play();
                 Debug.Log($"Executing melee attack for {action.Damage} damage");
                 break;
             case Type.Heal:
+                audioSource.clip = clips[5];
+                audioSource.Play();
                 Heal(action.HealAmount);
                 Debug.Log($"Healing target for {action.HealAmount}");
                 break;
@@ -158,6 +165,8 @@ public class Player : Character
                     Debug.Log("<color=orange> Enemy is not close enough for ranged attack </color>");
                     return;
                 }
+                audioSource.clip = clips[3];
+                audioSource.Play();
                 target.TakeDamage(action.Damage);
                 Debug.Log($"Executing ranged attack for {action.Damage} damage");
                 break;

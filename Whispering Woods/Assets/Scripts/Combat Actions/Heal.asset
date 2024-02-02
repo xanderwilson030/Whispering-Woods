@@ -16,4 +16,4 @@ MonoBehaviour:
   ActionType: 2
   Damage: 0
   ProjectilePrefab: {fileID: 0}
-  HealAmount: 1
+  HealAmount: 2

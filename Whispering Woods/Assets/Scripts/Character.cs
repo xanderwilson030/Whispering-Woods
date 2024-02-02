@@ -32,6 +32,10 @@ public abstract class Character : MonoBehaviour
     [Header("Particle FX")]
     [SerializeField] protected ParticleSystem damageParticles;
 
+    [Header("Audio FX")]
+    public AudioSource audioSource;
+    public AudioClip[] clips;
+
     private void Awake()
     {
         if (startingPos != null)
@@ -77,6 +81,8 @@ public abstract class Character : MonoBehaviour
         healthSlider.value = curHp;
 
         damageParticles.Play();
+        audioSource.clip = clips[0];
+        audioSource.Play();
 
         if (curHp <= 0)
         {
@@ -86,6 +92,8 @@ public abstract class Character : MonoBehaviour
 
     protected void Die()
     {
+        audioSource.clip = clips[1];
+        audioSource.Play();
         Destroy(gameObject);
     }
 
