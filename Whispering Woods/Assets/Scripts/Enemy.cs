@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 public class Enemy : Character
@@ -17,6 +18,7 @@ public class Enemy : Character
 
     [Header("Combat Details")]
     public List<CombatActions> abilities;
+    [SerializeField] private AnimationCurve healChanceCurve;
 
     //[Header("UI Details")]
 
@@ -71,6 +73,7 @@ public class Enemy : Character
         else
         {
             Debug.Log("Should be attacking player");
+            DetermineCombatAction();
         }
     }
 
@@ -151,9 +154,40 @@ public class Enemy : Character
         CalculateMovement();
     }
 
+    private void DetermineCombatAction()
+    {
+        float healthPercentage = curHp / maxHp;
+        bool wantToHeal = Random.value < healChanceCurve.Evaluate(healthPercentage);
+        
+        int remainingActions = maxTurnActions - currentActionCount;
+
+        if (remainingActions <= 1)
+        {
+            EndTurn();
+        }
+
+        if (wantToHeal)
+        {
+            TakeCombatAction(abilities[1], this);
+        }
+        else
+        {
+            TakeCombatAction(abilities[0], player);
+        }
+    }
+
     public override void TakeCombatAction(CombatActions action, Character target)
     {
-        throw new System.NotImplementedException();
+        if (action.ActionType == Type.Heal)
+        {
+            Heal(action.HealAmount);
+        }
+
+        if (action.ActionType == Type.Melee)
+        {
+            Debug.Log($"Attacked {target.name} for {action.Damage} damage");
+            target.TakeDamage(action.Damage);
+        }
     }
 
     public override void OnMouseEnter()
