@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,8 +10,13 @@ public class Enemy : Character
     [SerializeField] private Player player;
 
     [Header("Movement Details")]
-    [SerializeField] private int horizontalTileDistance;
-    [SerializeField] private int verticalTileDistance;
+    [SerializeField] private float distanceToPlayer;
+    [SerializeField] private int horizontalDistanceToPlayer;
+    [SerializeField] private int verticalDistanceToPlayer;
+    public int movementCooldown;
+
+    [Header("Combat Details")]
+    public List<CombatActions> abilities;
 
     //[Header("UI Details")]
 
@@ -22,63 +28,86 @@ public class Enemy : Character
 
     public override void CalculateMovement()
     {
-        float distanceToPlayer = Vector3.Distance(gameObject.transform.position, player.transform.position);
+        distanceToPlayer = Vector3.Distance(gameObject.transform.position, player.transform.position);
         Debug.Log($"Distance to player is: {distanceToPlayer}");
         Debug.Log($"Player location: {player.gameObject.transform.position} | Enemy location: {gameObject.transform.position}");
 
-        int horizontalDistanceToPlayer = (int)(player.gameObject.transform.position.x - gameObject.transform.position.x);
-        int verticalDistanceToPlayer = (int)(player.gameObject.transform.position.y - gameObject.transform.position.y);
+        horizontalDistanceToPlayer = (int)(player.gameObject.transform.position.x - gameObject.transform.position.x);
+        verticalDistanceToPlayer = (int)(player.gameObject.transform.position.y - gameObject.transform.position.y);
         Debug.Log($"H Distance: {horizontalDistanceToPlayer}:{verticalDistanceToPlayer}");
 
-        if (horizontalDistanceToPlayer > 0 || verticalDistanceToPlayer > 0)
-        {
-            RaycastHit2D hit;
+        
 
+        if (distanceToPlayer > 1)
+        {
+            bool canMoveNorth = false;
+            bool canMoveSouth = false;
+            bool canMoveEast = false;
+            bool canMoveWest = false;
+            
             if (verticalDistanceToPlayer > 0)
             {
-                hit = Physics2D.Raycast((Vector2)transform.position + Vector2.up, Vector3.up, rayCastDistance, movementLayerMask);
-                Debug.DrawRay((Vector2)transform.position + Vector2.up, Vector3.up, Color.red, rayCastDistance);
-
-                Move(hit);
+                canMoveNorth = TryMovementDirection(Vector2.up);
             }
-            else if (verticalDistanceToPlayer < 0)
+
+            if (verticalDistanceToPlayer < 0)
             {
-                hit = Physics2D.Raycast((Vector2)transform.position + Vector2.down, Vector3.down, rayCastDistance, movementLayerMask);
-                Debug.DrawRay((Vector2)transform.position + Vector2.down, Vector3.down, Color.red, rayCastDistance);
-
-                Move(hit);
-
+                canMoveSouth = TryMovementDirection(Vector2.down);
             }
-            else if (horizontalDistanceToPlayer < 0)
-            {
-                hit = Physics2D.Raycast((Vector2)transform.position + Vector2.left, Vector3.left, rayCastDistance, movementLayerMask);
-                Debug.DrawRay((Vector2)transform.position + Vector2.left, Vector3.left, Color.red, rayCastDistance);
 
-                Move(hit);
+            if (horizontalDistanceToPlayer < 0)
+            {
+                canMoveWest = TryMovementDirection(Vector2.left);
             }
-            else if (horizontalDistanceToPlayer > 0)
-            {
-                hit = Physics2D.Raycast((Vector2)transform.position + Vector2.right, Vector3.right, rayCastDistance, movementLayerMask);
-                Debug.DrawRay((Vector2)transform.position + Vector2.right, Vector3.right, Color.red, rayCastDistance);
 
+            if (horizontalDistanceToPlayer > 0)
+            {
+                canMoveEast = TryMovementDirection(Vector2.right);
+            }
+
+            Debug.Log($"North: {canMoveNorth} | South: {canMoveSouth} | East: {canMoveEast} | West: {canMoveWest}");
+
+        }
+        else
+        {
+            Debug.Log("Should be attacking player");
+        }
+    }
+
+    private bool TryMovementDirection(Vector2 dir)
+    {
+        RaycastHit2D hit;
+
+        hit = Physics2D.Raycast((Vector2)transform.position + dir, Vector3.up, rayCastDistance, movementLayerMask);
+        Debug.DrawRay((Vector2)transform.position + dir, Vector3.up, Color.red, rayCastDistance);
+
+        if (hit.collider == null)
+        {
+            Debug.Log($"<color=orange> Identified space is null, returning false for {dir} movement </color>");
+            return false;
+        }
+        else
+        {
+            gameObject.transform.position = hit.collider.gameObject.GetComponent<GridTile>().cellInWorldPos;
+            currentTile = hit.collider.gameObject.GetComponent<GridTile>();
+
+            if (currentTile.isOccupied)
+            {
+                Debug.Log($"<color=orange> Destination Tile is occupied, returning false for {dir} movement </color>");
+                return false;
+            }
+            else
+            {
                 Move(hit);
+                return true;
             }
         }
     }
 
     public override void Move(RaycastHit2D hit)
-    {
-        if (hit.collider == null)
-            return;
-
+    {       
         gameObject.transform.position = hit.collider.gameObject.GetComponent<GridTile>().cellInWorldPos;
         currentTile = hit.collider.gameObject.GetComponent<GridTile>();
-
-        if (currentTile.isOccupied)
-        {
-            Debug.Log("<color=orange> Destination Tile is occupied </color>");
-            return;
-        }
 
         currentActionCount++;
 
@@ -86,21 +115,41 @@ public class Enemy : Character
         {
             canMove = false;
             Debug.Log("<color=orange> Current character has exhausted their movement range </color>");
+            EndTurn();
         }
+        else
+        {
+            StartCoroutine(MovementDelay());
+        }
+    }
+
+    private IEnumerator MovementDelay()
+    {
+        float timer = movementCooldown;
+
+        while (timer > 0f)
+        {
+            timer -= Time.deltaTime;
+
+            yield return null;
+        }
+
+        Debug.Log("Movement Cooldown over");
+        CalculateMovement();
     }
 
     public override void EndTurn()
     {
-        throw new System.NotImplementedException();
+        canMove = false;
+        GameEvents.instance.e_TurnOver.Invoke();
     }
 
     public override void StartTurn()
     {
         currentActionCount = 0;
+        canMove = true;
         CalculateMovement();
     }
-
-
 
     public override void TakeCombatAction(CombatActions action, Character target)
     {
