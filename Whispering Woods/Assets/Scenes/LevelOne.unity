@@ -313,8 +313,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.00095009804, y: -0.00020003319, z: 0}
-    m_Extent: {x: 2.97085, y: 2.9205, z: 0}
+    m_Center: {x: 0.0012500286, y: 0.00039994717, z: 0}
+    m_Extent: {x: 2.98525, y: 2.9206, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -968,8 +968,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.00020003319, y: -0.001850009, z: 0}
-    m_Extent: {x: 2.989, y: 2.91785, z: 0}
+    m_Center: {x: 0.0069499016, y: -0.001850009, z: 0}
+    m_Extent: {x: 2.97735, y: 2.9088502, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -2006,8 +2006,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.0035500526, y: 0.000100016594, z: 0}
-    m_Extent: {x: 2.97925, y: 2.9214, z: 0}
+    m_Center: {x: 0.0042499304, y: 0.0010499954, z: 0}
+    m_Extent: {x: 2.97655, y: 2.91595, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -5326,8 +5326,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.1293999, y: -0.6428, z: 0}
-    m_Extent: {x: 2.3319001, y: 1.5224999, z: 0}
+    m_Center: {x: 0.12679994, y: -0.63689995, z: 0}
+    m_Extent: {x: 2.3253999, y: 1.5228, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -7514,8 +7514,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.0020999908, y: 0.0002501011, z: 0}
-    m_Extent: {x: 2.9854, y: 2.91995, z: 0}
+    m_Center: {x: -0.0022500753, y: 0.0038000345, z: 0}
+    m_Extent: {x: 2.97185, y: 2.9099002, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -10616,8 +10616,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.0001500845, y: 0.003450036, z: 0}
-    m_Extent: {x: 2.97795, y: 2.91635, z: 0}
+    m_Center: {x: -0.0035499334, y: 0, z: 0}
+    m_Extent: {x: 2.98145, y: 2.9178, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -11239,6 +11239,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2088287095}
     - target: {fileID: 7225771577803267309, guid: a77f20151610e844c86d438741756d9e, type: 3}
+      propertyPath: damageParticles
+      value: 
+      objectReference: {fileID: 3818883077348010409}
+    - target: {fileID: 7225771577803267309, guid: a77f20151610e844c86d438741756d9e, type: 3}
       propertyPath: movementCooldown
       value: 2
       objectReference: {fileID: 0}
@@ -11259,6 +11263,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a77f20151610e844c86d438741756d9e, type: 3}
+--- !u!198 &3818883077348010409 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 1604913185772173616, guid: a77f20151610e844c86d438741756d9e, type: 3}
+  m_PrefabInstance: {fileID: 3818883077348010408}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4903727154771647079
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11320,6 +11329,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1139953079}
     - target: {fileID: 4587872325870169963, guid: 39c955228f28d67429bf17d8474866be, type: 3}
+      propertyPath: damageParticles
+      value: 
+      objectReference: {fileID: 4903727154771647080}
+    - target: {fileID: 4587872325870169963, guid: 39c955228f28d67429bf17d8474866be, type: 3}
       propertyPath: baseHighLightIntensity
       value: 1
       objectReference: {fileID: 0}
@@ -11372,6 +11385,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 39c955228f28d67429bf17d8474866be, type: 3}
+--- !u!198 &4903727154771647080 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 3642039066730962169, guid: 39c955228f28d67429bf17d8474866be, type: 3}
+  m_PrefabInstance: {fileID: 4903727154771647079}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8993937693785832483
 PrefabInstance:
   m_ObjectHideFlags: 0

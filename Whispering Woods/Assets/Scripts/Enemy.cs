@@ -159,13 +159,6 @@ public class Enemy : Character
         float healthPercentage = curHp / maxHp;
         bool wantToHeal = Random.value < healChanceCurve.Evaluate(healthPercentage);
         
-        int remainingActions = maxTurnActions - currentActionCount;
-
-        if (remainingActions <= 1)
-        {
-            EndTurn();
-        }
-
         if (wantToHeal)
         {
             TakeCombatAction(abilities[1], this);
@@ -173,6 +166,17 @@ public class Enemy : Character
         else
         {
             TakeCombatAction(abilities[0], player);
+        }
+
+        currentActionCount++;
+
+        if (currentActionCount >= maxTurnActions)
+        {
+            EndTurn();
+        }
+        else
+        {
+            StartCoroutine(MovementDelay());
         }
     }
 

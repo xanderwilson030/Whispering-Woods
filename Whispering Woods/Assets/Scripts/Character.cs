@@ -29,6 +29,9 @@ public abstract class Character : MonoBehaviour
     [Header("Health Slider")]
     public Slider healthSlider;
 
+    [Header("Particle FX")]
+    [SerializeField] protected ParticleSystem damageParticles;
+
     private void Awake()
     {
         if (startingPos != null)
@@ -72,6 +75,8 @@ public abstract class Character : MonoBehaviour
         curHp -= damageToTake;
 
         healthSlider.value = curHp;
+
+        damageParticles.Play();
 
         if (curHp <= 0)
         {

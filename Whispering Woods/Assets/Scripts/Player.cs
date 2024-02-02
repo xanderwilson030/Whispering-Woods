@@ -145,7 +145,7 @@ public class Player : Character
                     return;
                 }
                 target.TakeDamage(action.Damage);
-                Debug.Log($"Executing melee atack for {action.Damage} damage");
+                Debug.Log($"Executing melee attack for {action.Damage} damage");
                 break;
             case Type.Heal:
                 Heal(action.HealAmount);
@@ -158,11 +158,16 @@ public class Player : Character
                     Debug.Log("<color=orange> Enemy is not close enough for ranged attack </color>");
                     return;
                 }
+                target.TakeDamage(action.Damage);
+                Debug.Log($"Executing ranged attack for {action.Damage} damage");
                 break;
             default:
                 Debug.LogError("Incompatible Combat Action Type Inputted");
                 break;
         }
+
+        currentActionCount++;
+        movementSlider.value = (maxTurnActions - currentActionCount);
     }
 
     private void SelectTarget(CombatActions action)

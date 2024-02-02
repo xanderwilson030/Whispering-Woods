@@ -46,10 +46,12 @@ public class GameManager : MonoBehaviour
     {
         currentCharacterIndex++;
 
-        if (currentCharacterIndex > characterList.Count)
+        if (currentCharacterIndex >= characterList.Count)
         {
             currentCharacterIndex = 0;
         }
+
+        Debug.Log($"Current character index is: {currentCharacterIndex}");
 
         currentCharacter = characterList[currentCharacterIndex];
 
