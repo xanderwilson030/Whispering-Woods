@@ -101,6 +101,8 @@ public abstract class Character : MonoBehaviour
     {
         curHp += healAmount;
 
+        healthSlider.value = curHp;
+
         if (curHp > maxHp)
         {
             curHp = maxHp;

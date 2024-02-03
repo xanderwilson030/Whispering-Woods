@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ranged
   m_EditorClassIdentifier: 
   DisplayName: Bow
-  ActionType: 0
+  ActionType: 1
   Damage: 2
   ProjectilePrefab: {fileID: 0}
   HealAmount: 0

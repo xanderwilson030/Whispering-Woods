@@ -30,6 +30,7 @@ public class Enemy : Character
 
     public override void CalculateMovement()
     {
+        //Debug.Break();
         distanceToPlayer = Vector3.Distance(gameObject.transform.position, player.transform.position);
         Debug.Log($"Distance to player is: {distanceToPlayer}");
         Debug.Log($"Player location: {player.gameObject.transform.position} | Enemy location: {gameObject.transform.position}");
@@ -121,7 +122,7 @@ public class Enemy : Character
         {
             canMove = false;
             Debug.Log("<color=orange> Current character has exhausted their movement range </color>");
-            EndTurn();
+            //EndTurn();
         }
         else
         {
@@ -144,18 +145,7 @@ public class Enemy : Character
         CalculateMovement();
     }
 
-    public override void EndTurn()
-    {
-        canMove = false;
-        GameEvents.instance.e_TurnOver.Invoke();
-    }
 
-    public override void StartTurn()
-    {
-        currentActionCount = 0;
-        canMove = true;
-        CalculateMovement();
-    }
 
     private void DetermineCombatAction()
     {
@@ -175,7 +165,7 @@ public class Enemy : Character
 
         if (currentActionCount >= maxTurnActions)
         {
-            EndTurn();
+            //EndTurn();
         }
         else
         {
@@ -215,5 +205,29 @@ public class Enemy : Character
     {
         isHighlighted = false;
         highLight.intensity = baseHighLightIntensity;
+    }
+
+    public override void EndTurn()
+    {
+        canMove = false;
+        GameEvents.instance.e_TurnOver.Invoke();
+    }
+
+    public override void StartTurn()
+    {
+        currentActionCount = 0;
+        canMove = true;
+        CalculateMovement();
+        StartCoroutine(EnemyTurnCounter());
+    }
+
+    private IEnumerator EnemyTurnCounter()
+    {
+        while (currentActionCount < maxTurnActions)
+        {
+            yield return null;
+        }
+
+        EndTurn();
     }
 }
