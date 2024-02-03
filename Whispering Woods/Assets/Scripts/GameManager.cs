@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using Cinemachine;
 using UnityEngine.SceneManagement;
-using UnityEditor.Build.Content;
 
 public class GameManager : MonoBehaviour
 {
@@ -37,6 +36,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         GameEvents.instance.e_TurnOver.AddListener(BeginNextTurn);
+        GameEvents.instance.e_CharacterDied.AddListener(CharacterDied);
 
         BeginNextTurn();
     }
@@ -76,6 +76,19 @@ public class GameManager : MonoBehaviour
         currentCharacter.StartTurn();
 
         Debug.Log("<color=green> New Turn Started for Character: " + currentCharacter.gameObject.name + "</color>");
+    }
+
+    /*
+     *  This method is called when a character died
+     */
+    private void CharacterDied(Character character)
+    {
+        characterList.Remove(character);
+
+        if (characterList.Count == 1)
+        {
+            SceneManager.LoadScene(0);
+        }
     }
 
 

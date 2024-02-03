@@ -230,4 +230,9 @@ public class Enemy : Character
 
         EndTurn();
     }
+
+    private void OnDestroy()
+    {
+        GameEvents.instance.e_CharacterDied.Invoke(this);
+    }
 }

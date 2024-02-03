@@ -9,6 +9,7 @@ public class GameEvents : MonoBehaviour
 
     public UnityEvent e_TurnStart;
     public UnityEvent e_TurnOver;
+    public UnityEvent<Character> e_CharacterDied;
 
     private void Awake()
     {
@@ -29,6 +30,11 @@ public class GameEvents : MonoBehaviour
         if (e_TurnOver == null)
         {
             e_TurnOver = new UnityEvent();
+        }
+
+        if (e_CharacterDied == null)
+        {
+            e_CharacterDied = new UnityEvent<Character>();
         }
     }
 }
