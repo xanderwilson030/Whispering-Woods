@@ -15,5 +15,5 @@ MonoBehaviour:
   DisplayName: Bow
   ActionType: 1
   Damage: 2
-  ProjectilePrefab: {fileID: 0}
+  ProjectilePrefab: {fileID: 184814851474970859, guid: d69ef96df237f7e43816c4569b3b10b8, type: 3}
   HealAmount: 0

@@ -167,6 +167,10 @@ public class Player : Character
                 }
                 audioSource.clip = clips[3];
                 audioSource.Play();
+
+                //GameObject arrow = Instantiate(action.ProjectilePrefab, gameObject.transform.position, Quaternion.identity);
+                //arrow.GetComponent<Projectile>().LookTowardsTarget(target.transform);
+
                 target.TakeDamage(action.Damage);
                 Debug.Log($"Executing ranged attack for {action.Damage} damage");
                 break;
