@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using Cinemachine;
+using UnityEngine.SceneManagement;
+using UnityEditor.Build.Content;
 
 public class GameManager : MonoBehaviour
 {
@@ -37,6 +39,19 @@ public class GameManager : MonoBehaviour
         GameEvents.instance.e_TurnOver.AddListener(BeginNextTurn);
 
         BeginNextTurn();
+    }
+
+    private void Update()
+    {
+        if (player == null)
+        {
+            SceneManager.LoadScene(0);
+        }
+
+        if (characterList.Count == 1 && characterList[0] == player)
+        {
+            SceneManager.LoadScene(0);
+        }
     }
 
     /*
