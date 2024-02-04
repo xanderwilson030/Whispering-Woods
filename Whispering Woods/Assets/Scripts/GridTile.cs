@@ -19,7 +19,7 @@ public class GridTile : MonoBehaviour
 
     [Header("Object Data")]
     public bool isLit;
-    public bool isOccupied;
+    public bool isOccupied = false;
     public bool isWalkable;
     private GameObject currentOccupant;
 

@@ -15,6 +15,7 @@ public class Enemy : Character
     [SerializeField] private int horizontalDistanceToPlayer;
     [SerializeField] private int verticalDistanceToPlayer;
     public int movementCooldown;
+    public GridTile previousTile;
 
     [Header("Combat Details")]
     public List<CombatActions> abilities;
@@ -109,9 +110,17 @@ public class Enemy : Character
     }
 
     public override void Move(RaycastHit2D hit)
-    {       
-        gameObject.transform.position = hit.collider.gameObject.GetComponent<GridTile>().cellInWorldPos;
+    {   
+        if (previousTile != null)
+        {
+            previousTile.isOccupied = false;
+        }
+
         currentTile = hit.collider.gameObject.GetComponent<GridTile>();
+
+        gameObject.transform.position = hit.collider.gameObject.GetComponent<GridTile>().cellInWorldPos;
+        currentTile.isOccupied = true;
+        previousTile = currentTile;
 
         currentActionCount++;
 

@@ -28,6 +28,9 @@ public class Player : Character
     public List<GridTile> debugList;
     public Tilemap tilemap;
 
+    [Header("Movement Details")]
+    public GridTile previousTile;
+
 
     private void Start()
     {
@@ -93,13 +96,22 @@ public class Player : Character
         if (hit.collider == null)
             return;
 
-        gameObject.transform.position = hit.collider.gameObject.GetComponent<GridTile>().cellInWorldPos;
+        if (previousTile != null)
+        {
+            previousTile.isOccupied = false;
+        }
+
         currentTile = hit.collider.gameObject.GetComponent<GridTile>();
 
-        if (currentTile.isOccupied){
+        if (currentTile.isOccupied)
+        {
             Debug.Log("<color=orange> Destination Tile is occupied </color>");
             return;
         }
+
+        gameObject.transform.position = hit.collider.gameObject.GetComponent<GridTile>().cellInWorldPos;
+        currentTile.isOccupied = true;
+        previousTile = currentTile;
 
         currentActionCount++;
         movementSlider.value = (maxTurnActions - currentActionCount);
